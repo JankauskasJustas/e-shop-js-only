@@ -5,13 +5,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.png" />
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <title>T-shirt shop</title>
 </head>
 
 <body>
+    <header class="header header--sticky header--rounded">
+        <div class="header__main-header inline-flex full-width">
+            <img class="logo-img" src="/assets/Harden.svg" alt="Logo">
+            <div>
+                <input type="text" placeholder="Search...">
+                <a href="javascript:void(0);">Login</a>
+            </div>
+        </div>
+        <div class="header__second-header inline-flex full-width">
+            <a href="javascript:void(0);">Home</a>
+            <a href="javascript:void(0);">About</a>
+            <a href="javascript:void(0);">Players</a>
+            <a href="javascript:void(0);">Merch</a>
+        </div>
+    </header>
 
+    <div class="content centered-grid">
+        <div class="carousel">
+            <button class="button button--hanging-left">
+                <img width="75" height="75" src="/assets/arrow-left.svg" alt="Arrow right">
+            </button>
+            <button class="button button--hanging-right">
+                <img width="75" height="75" src="/assets/arrow-right.svg" alt="Arrow left">
+            </button>
+            <div class="carousel__content">
 
-    <script src="./main.js"></script>
+            </div>
+        </div>
+        <div class="items-container">
+            <div class="items-container__item">Item 1</div>
+            <div class="items-container__item">Item 2</div>
+            <div class="items-container__item">Item 3</div>
+            <div class="items-container__item">Item 4</div>
+            <div class="items-container__item">Item 5</div>
+            <div class="items-container__item">Item 6</div>
+            <div class="items-container__item">Item 1</div>
+            <div class="items-container__item">Item 2</div>
+            <div class="items-container__item">Item 3</div>
+            <div class="items-container__item">Item 4</div>
+            <div class="items-container__item">Item 5</div>
+            <div class="items-container__item">Item 6</div>
+        </div>
+    </div>
+
+    <footer class="footer footer--rounded">
+        <span>Here are the contents of the footer</span>
+    </footer>
+    <script type="module" src="./src/app.js"></script>
+    <script type="module" src="./src/carousel.js"></script>
 </body>
 
 </html>
