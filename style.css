@@ -63,10 +63,17 @@ body {
   border-top-left-radius: 45px;
 }
 
-.items-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1em;
+.link-item {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  transition: transform 0.5s;
+}
+
+.link-item:hover {
+  transform: scale(1.2);
+  transition: transform 0.5s;
 }
 
 .centered-grid {
@@ -74,14 +81,6 @@ body {
   align-items: center;
   justify-content: center;
   grid-gap: 15px;
-}
-
-.items-container__item {
-  padding: 20px;
-  width: 200px;
-  height: 250px;
-  background-color: yellow;
-  margin: 20px;
 }
 
 .logo-img {
@@ -93,6 +92,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.space-evenly {
+  justify-content: space-evenly;
 }
 
 .full-width {

@@ -1,6 +1,7 @@
-function main() {
-    console.log('As esu mldc');
-}
+// function main() {
+//   setTimeout(() => {
+//     const div = createDivElement();
+//   }, 2000);
+// }
 
-
-main();
+// main();
