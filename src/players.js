@@ -1,12 +1,27 @@
 import { Repository } from "./repository.js";
 
 document.querySelector(".items-container").addEventListener("click", (e) => {
-  if (e.target.classList.contains("items-container__item")) {
-    x.activePlayerId = Number(e.target.id);
-  } else if (
-    e.target.parentElement.classList.contains("items-container__item")
+  if (
+    e.target.classList.contains("items-container__item") &&
+    activePlayerIdChange.id !== Number(e.target.id)
   ) {
-    x.activePlayerId = Number(e.target.parentElement.id);
+    activePlayerIdChange.id = Number(e.target.id);
+  } else if (
+    e.target.parentElement.classList.contains("items-container__item") &&
+    activePlayerIdChange.id !== Number(e.target.parentElement.id)
+  ) {
+    activePlayerIdChange.id = Number(e.target.parentElement.id);
+  }
+});
+
+activePlayerIdChange.listenForChanges((id) => {
+  const itemElements = document.querySelectorAll(".items-container__item");
+  for (const item of itemElements) {
+    if (Number(item.id) === id) {
+      item.classList.add("items-container__item--active");
+    } else {
+      item.classList.remove("items-container__item--active");
+    }
   }
 });
 
@@ -28,6 +43,8 @@ function renderPlayers() {
 
     itemsContainer.appendChild(div);
   });
+  itemsContainer.firstElementChild.click();
+  itemsContainer.firstElementChild.focus();
 }
 
 function createDivElement(player) {

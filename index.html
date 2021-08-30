@@ -52,18 +52,23 @@
     </footer>
     <script type="text/javascript">
         var players;
-        var x = { // Rename this
+        var activePlayerIdChange = { // Rename this
             aInternal: 0,
-            aListener: function (val) { },
-            set activePlayerId(val) {
+            playersListener: function (val) { },
+            carouselListener: function (val) { },
+            set id(val) {
                 this.aInternal = val;
-                this.aListener(val);
+                this.playersListener(val);
+                this.carouselListener(val);
             },
-            get activePlayerId() {
+            get id() {
                 return this.aInternal;
             },
-            registerListener: function (listener) {
-                this.aListener = listener;
+            listenForChanges: function (listener) {
+                this.playersListener = listener;
+            },
+            listenForChanges2: function (listener) {
+                this.carouselListener = listener;
             }
         }
     </script>

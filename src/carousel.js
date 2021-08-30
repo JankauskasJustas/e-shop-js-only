@@ -1,25 +1,11 @@
 const carousel = document.querySelector(".carousel");
+let slidePosition = 0;
+let slides;
+let totalSlides;
 
-// function init() {
-//   content_arr.forEach((src, index) => {
-//     const div = createDivElement();
-//     const img = createImgElement(src);
-//     const h3 = createH3Element();
-//     const a = createAElement();
-
-//     if (index === 0) {
-//       div.classList.add("carousel__item--visible");
-//     }
-
-//     div.appendChild(img);
-//     div.appendChild(h3);
-//     div.appendChild(a);
-//     carousel.appendChild(div);
-//   });
-// }
-
-// init();
 function renderCarousel(jerseys) {
+  cleanupCarousel();
+
   jerseys.forEach((jersey, index) => {
     const div = createDivElement();
     const img = createImgElement(jersey);
@@ -35,15 +21,13 @@ function renderCarousel(jerseys) {
     div.appendChild(a);
     carousel.appendChild(div);
   });
+
+  slides = document.getElementsByClassName("carousel__item");
+  totalSlides = slides.length;
 }
 
-let slidePosition = 0;
-const slides = document.getElementsByClassName("carousel__item");
-const totalSlides = slides.length;
-
-x.registerListener((activePlayerId) => {
+activePlayerIdChange.listenForChanges2((activePlayerId) => {
   const player = players.find((player) => player.id === activePlayerId);
-  console.log(player);
 
   renderCarousel(player.jerseys);
 });
@@ -59,6 +43,19 @@ document
   .addEventListener("click", () => {
     moveToPrevSlide();
   });
+
+function cleanupCarousel() {
+  const nodesToRemove = [];
+  carousel.childNodes.forEach((node) => {
+    if (node.classList?.contains("carousel__item")) {
+      nodesToRemove.push(node);
+    }
+  });
+
+  nodesToRemove.forEach((node) => {
+    carousel.removeChild(node);
+  });
+}
 
 function updateSlidePosition() {
   for (let slide of slides) {
