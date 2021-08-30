@@ -16,20 +16,32 @@
   align-items: center;
   transition: transform 0.15s, box-shadow 0.15s;
   border-radius: 20px;
+  justify-content: center;
 }
 
-/* .items-container__item:focus {
-  box-shadow: 0px 0px 40px -10px #fbff00;
-  outline: none;
-} */
+.items-container__item img,
+.items-container__item span {
+  pointer-events: none;
+}
+
+.new-item-form {
+  height: 100%;
+  display: grid;
+  align-items: center;
+  text-align: start;
+}
+.plus--small {
+  height: 85px;
+}
 
 .items-container__item--active {
   box-shadow: 0px 0px 40px -10px #fbff00;
   outline: none;
 }
 
-.items-container__item img {
+.items-container__item img:not(.plus--small) {
   height: 300px;
+  max-width: 280px;
 }
 
 .items-container__item:hover {
