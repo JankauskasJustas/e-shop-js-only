@@ -4,6 +4,8 @@
   width: 100%;
   position: relative;
   justify-self: center;
+  background-color: var(--item-bg-color);
+  border-radius: var(--item-carousel-border-radius);
 }
 
 .carousel .carousel__item,

@@ -11,6 +11,10 @@
     rgba(233, 247, 54, 0.75) 50%,
     rgba(146, 58, 159, 0.75) 100%
   );
+
+  --item-bg-color: rgb(53 0 40 / 22%);
+
+  --item-carousel-border-radius: 20px;
 }
 
 html {

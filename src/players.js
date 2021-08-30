@@ -6,6 +6,39 @@ document
   .querySelector(".items-container")
   .addEventListener("click", async (e) => {
     const id = Number(e.target.id);
+
+    if (e.target.id.startsWith("deleteBtn")) {
+      const id = Number(e.target.id.substring(10));
+      Repository.deletePlayer(id);
+      return;
+    }
+
+    if (e.target.id.startsWith("editBtn")) {
+      const id = Number(e.target.id.substring(10));
+      const itemContainer = e.target.parentElement.parentElement;
+      // Need to get Player obj
+      // itemContainer.innerHTML = `
+      // <form class="new-item-form">
+      //     <label>
+      //         <span>Upload main image</span>
+      //         <input required type="file" name="image" id="image">
+      //     </label>
+      //     <label>
+      //         <span>Name</span>
+      //         <input required type="text" name="name" id="name" value="${}">
+      //     </label>
+      //     <label>
+      //         <span>Surname</span>
+      //         <input required type="text" name="surname" id="surname">
+      //     </label>
+      //     <label>
+      //         <span>Upload jerseys</span>
+      //         <input required type="file" name="jerseys" id="jerseys" multiple>
+      //     </label>
+      //     <button id="submitBtn" type="button">Submit</button>
+      // </form>`;
+    }
+
     if (
       !e.target.classList.contains("item--new") &&
       e.target.classList.contains("items-container__item") &&
@@ -35,7 +68,6 @@ document
         img,
         jerseys,
       });
-      console.log(response);
     } else if (e.target.classList.contains("item--new")) {
       e.target.innerHTML = ` 
     <form class="new-item-form">
@@ -102,9 +134,11 @@ async function initializePlayers() {
 function renderPlayers() {
   players.forEach((player) => {
     const div = createDivElement(player);
+    const actions = createActionsElements(player.id);
     const img = createImgElement(player);
     const span = createSpanElement(player);
 
+    div.appendChild(actions);
     div.appendChild(img);
     div.appendChild(span);
 
@@ -121,6 +155,37 @@ function createDivElement(player) {
   div.classList.add("items-container__item");
   div.tabIndex = 0;
   div.id = player.id;
+
+  return div;
+}
+
+function createActionsElements(id) {
+  const div = document.createElement("div");
+  div.classList.add("item__actions");
+
+  const editBtn = document.createElement("button");
+  editBtn.id = `editBtn-${id}`;
+  editBtn.classList.add("small-icon-btn");
+  editBtn.classList.add("small-margin-right");
+
+  const pencilImg = document.createElement("img");
+  pencilImg.classList.add("pencil");
+  pencilImg.src = "assets/pencil.svg";
+
+  editBtn.appendChild(pencilImg);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.id = `deleteBtn-${id}`;
+  deleteBtn.classList.add("small-icon-btn");
+
+  const trashImg = document.createElement("img");
+  trashImg.classList.add("trash");
+  trashImg.src = "assets/trash.svg";
+
+  deleteBtn.appendChild(trashImg);
+
+  div.appendChild(editBtn);
+  div.appendChild(deleteBtn);
 
   return div;
 }
