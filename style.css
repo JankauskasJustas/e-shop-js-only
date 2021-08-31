@@ -35,9 +35,15 @@ body {
 
 .header {
   max-height: 100px;
-  padding: 0px 20px 0 20px;
+  padding: 5px 20px 5px 20px;
   margin: 0 40px 0 40px;
   background: var(--header-footer-bg-color);
+}
+
+@media (max-width: 400px) {
+  .header {
+    margin: 0;
+  }
 }
 
 .header--sticky {
@@ -45,7 +51,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 6;
 }
 
 .header--rounded {
@@ -53,7 +59,10 @@ body {
   border-bottom-right-radius: 45px;
   border-bottom-left-radius: 45px;
 }
-
+.header__main-header {
+  justify-content: space-between;
+  position: relative;
+}
 .footer {
   padding: 20px;
   margin: 0 40px 0 40px;
@@ -94,14 +103,14 @@ body {
 }
 
 .logo-img {
-  width: 100px;
-  height: 50px;
+  width: 65px;
+  height: 25px;
 }
 
 .inline-flex {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .space-evenly {

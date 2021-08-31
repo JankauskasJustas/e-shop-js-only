@@ -52,30 +52,25 @@
     </footer>
     <script type="text/javascript">
         var players;
-        var activePlayerIdChange = { // Rename this
+        var activePlayerIdChange = {
             aInternal: 0,
-            playersListener: function (val) { },
-            carouselListener: function (val) { },
+            listener: function (val) { },
             set id(val) {
                 this.aInternal = val;
-                this.playersListener(val);
-                this.carouselListener(val);
+                this.listener(val);
             },
             get id() {
                 return this.aInternal;
             },
             listenForChanges: function (listener) {
-                this.playersListener = listener;
-            },
-            listenForChanges2: function (listener) {
-                this.carouselListener = listener;
+                this.listener = listener;
             }
         }
     </script>
     <script type="module" src="./src/app.js"></script>
+    <script type="module" src="./src/players.js"></script>
     <script type="module" src="./src/carousel.js"></script>
     <script type="module" src="./src/repository.js"></script>
-    <script type="module" src="./src/players.js"></script>
 </body>
 
 </html>

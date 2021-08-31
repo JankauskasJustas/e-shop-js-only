@@ -1,62 +1,56 @@
 import { Repository } from "./repository.js";
 
-let form;
+export const Players = (() => {
+  let form;
 
-document
-  .querySelector(".items-container")
-  .addEventListener("click", async (e) => {
-    const id = Number(e.target.id);
+  const findPlayer = (id) => {
+    return players.find((player) => player.id === id);
+  };
 
-    // Delete handler
-    if (e.target.id.startsWith("deleteBtn")) {
-      const id = Number(e.target.id.substring(10));
-      Repository.deletePlayer(id);
-      return;
-    }
+  const deletePlayer = (e) => {
+    const id = Number(e.target.id.substring(10));
+    Repository.deletePlayer(id);
+    return;
+  };
 
-    // Edit handler
-    if (e.target.id.startsWith("editBtn")) {
-      const id = Number(e.target.id.substring(8));
-      const itemContainer = e.target.parentElement.parentElement;
-      const playerToEdit = findPlayer(id);
+  const startEditingPlayer = (e) => {
+    const id = Number(e.target.id.substring(8));
+    const itemContainer = e.target.parentElement.parentElement;
+    const playerToEdit = findPlayer(id);
 
-      itemContainer.innerHTML = `
-      <button class="cancel-btn" id="cancelBtn" type="button">X</button> 
-      <form class="new-item-form">
-      <input hidden type="number" name="id" id="id" value="${playerToEdit.id}">
-        <label>
-            <span>Change main image</span>
-            <input hidden type="file" name="image" id="image">
-            <button type="button" onclick="document.getElementById('image').click()">Choose file...</button>
-        </label>
-        <label>
-            <span>Name</span>
-            <input type="text" name="name" placeholder="Add player name" id="name" value="${playerToEdit.name}">
-        </label>
-        <label>
-            <span>Surname</span>
-            <input type="text" name="surname" placeholder="Add player surname" id="surname" value="${playerToEdit.surname}">
-        </label>
-        <label>
-            <span>Upload jerseys</span>
-            <input hidden type="file" name="jerseys" id="jerseys" multiple>
-            <button type="button" onclick="document.getElementById('jerseys').click()">Choose files...</button>
-        </label>
-        <button class="form__submit-btn" id="updatePlayerBtn" type="button">Update</button>
-    </form>
-      `;
+    itemContainer.innerHTML = `
+    <button class="cancel-btn" id="cancelBtn" type="button">X</button> 
+    <form class="new-item-form">
+    <input hidden type="number" name="id" id="id" value="${playerToEdit.id}">
+      <label>
+          <span>Change main image</span>
+          <input hidden type="file" name="image" id="image">
+          <button type="button" onclick="document.getElementById('image').click()">Choose file...</button>
+      </label>
+      <label>
+          <span>Name</span>
+          <input type="text" name="name" placeholder="Add player name" id="name" value="${playerToEdit.name}">
+      </label>
+      <label>
+          <span>Surname</span>
+          <input type="text" name="surname" placeholder="Add player surname" id="surname" value="${playerToEdit.surname}">
+      </label>
+      <label>
+          <span>Upload jerseys</span>
+          <input hidden type="file" name="jerseys" id="jerseys" multiple>
+          <button type="button" onclick="document.getElementById('jerseys').click()">Choose files...</button>
+      </label>
+      <button class="form__submit-btn" id="updatePlayerBtn" type="button">Update</button>
+  </form>
+    `;
 
-      // if(form) {
+    form = document.querySelector(".new-item-form");
 
-      // }
-      form = document.querySelector(".new-item-form");
+    return;
+  };
 
-      return;
-    }
-
-    // Add new item click handler
-    if (e.target.classList.contains("item--new")) {
-      e.target.innerHTML = `
+  const startCreatingNewItem = (e) => {
+    e.target.innerHTML = `
     <button class="cancel-btn" id="cancelBtn" type="button">X</button> 
     <form class="new-item-form">
         <label>
@@ -80,109 +74,110 @@ document
         <button class="form__submit-btn" id="addNewPlayerBtn" type="button">Submit</button>
     </form>`;
 
-      form = document.querySelector(".new-item-form");
-      return;
-    }
+    form = document.querySelector(".new-item-form");
+    return;
+  };
 
-    // Active item change handler
-    if (
-      !e.target.classList.contains("item--new") &&
-      e.target.classList.contains("items-container__item") &&
-      activePlayerIdChange.id !== id
-    ) {
-      activePlayerIdChange.id = Number(e.target.id);
-      return;
-    }
-
-    // Add new player form handler
-    if (e.target.id === "addNewPlayerBtn") {
-      const name = form.elements.name.value;
-      const surname = form.elements.surname.value;
-      const img = await toBase64(form.elements.image.files[0]);
-      const jerseys = await Promise.all(
-        Array.from(form.elements.jerseys.files).map(async (file) => {
-          return {
-            title: file.name,
-            img: await toBase64(file),
-          };
-        })
-      );
-
-      if (!name || !surname || !img || !jerseys.length) {
-        alert("All values must be set!");
-        return;
+  const activeItemChange = (id) => {
+    const itemElements = document.querySelectorAll(".items-container__item");
+    for (const item of itemElements) {
+      if (Number(item.id) === id) {
+        item.classList.add("items-container__item--active");
+      } else {
+        item.classList.remove("items-container__item--active");
       }
+    }
+    activePlayerIdChange.id = id;
+    return;
+  };
 
-      const response = await Repository.insertPlayer({
+  const addNewPlayer = async () => {
+    const name = form.elements.name.value;
+    const surname = form.elements.surname.value;
+    const img = await toBase64(form.elements.image.files[0]);
+    const jerseys = await Promise.all(
+      Array.from(form.elements.jerseys.files).map(async (file) => {
+        return {
+          title: file.name,
+          img: await toBase64(file),
+        };
+      })
+    );
+
+    if (!name || !surname || !img || !jerseys.length) {
+      alert("All values must be set!");
+      return;
+    }
+
+    await Repository.insertPlayer({
+      name,
+      surname,
+      img,
+      jerseys,
+    });
+
+    return;
+  };
+
+  const updatePlayer = async () => {
+    const id = form.elements.id.valueAsNumber;
+    const player = findPlayer(id);
+    const name = form.elements.name.value;
+    const surname = form.elements.surname.value;
+    const img = (await toBase64(form.elements.image.files[0])) ?? player.img;
+    const jerseys = form.elements.jerseys.files.length
+      ? await Promise.all(
+          Array.from(form.elements.jerseys.files).map(async (file) => {
+            return {
+              title: file.name,
+              img: await toBase64(file),
+            };
+          })
+        )
+      : player.jerseys;
+
+    await Repository.updatePlayer(
+      {
         name,
         surname,
         img,
         jerseys,
-      });
+      },
+      id
+    );
 
-      return;
-    }
+    return;
+  };
 
-    // Update existing player handler
-    if (e.target.id === "updatePlayerBtn") {
-      const id = form.elements.id.valueAsNumber;
-      const player = findPlayer(id);
-      const name = form.elements.name.value;
-      const surname = form.elements.surname.value;
-      const img = (await toBase64(form.elements.image.files[0])) ?? player.img;
-      const jerseys = form.elements.jerseys.files.length
-        ? await Promise.all(
-            Array.from(form.elements.jerseys.files).map(async (file) => {
-              return {
-                title: file.name,
-                img: await toBase64(file),
-              };
-            })
-          )
-        : player.jerseys;
+  const cancelEditing = (e) => {
+    const parentElem = e.target.parentElement;
+    if (parentElem.classList.contains("item--new")) {
+      const content = getNewItemContent();
 
-      const response = await Repository.updatePlayer(
-        {
-          name,
-          surname,
-          img,
-          jerseys,
-        },
-        id
-      );
-
-      return;
-    }
-
-    // Cancel edit or insert
-    if (e.target.id === "cancelBtn") {
-      const parentElem = e.target.parentElement;
-      if (parentElem.classList.contains("item--new")) {
-        const content = getNewItemContent();
-
-        parentElem.innerHTML = "";
-        parentElem.append(...content);
-      } else {
-        const id = Number(parentElem.id);
-        const player = findPlayer(id);
-        const content = getItemContent(player);
-
-        parentElem.innerHTML = "";
-        parentElem.append(...content);
-      }
-    }
-  });
-
-activePlayerIdChange.listenForChanges((id) => {
-  const itemElements = document.querySelectorAll(".items-container__item");
-  for (const item of itemElements) {
-    if (Number(item.id) === id) {
-      item.classList.add("items-container__item--active");
+      parentElem.innerHTML = "";
+      parentElem.append(...content);
     } else {
-      item.classList.remove("items-container__item--active");
+      const id = Number(parentElem.id);
+      const player = findPlayer(id);
+      const content = getItemContent(player);
+
+      parentElem.innerHTML = "";
+      parentElem.append(...content);
     }
-  }
-});
+  };
+
+  return {
+    deletePlayer,
+    startEditingPlayer,
+    startCreatingNewItem,
+    activeItemChange,
+    addNewPlayer,
+    updatePlayer,
+    cancelEditing,
+  };
+})();
+
+const itemsContainer = document.querySelector(".items-container");
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -203,7 +198,6 @@ const dropSignature = (base64) => {
   return base64.substring(indexFrom);
 };
 
-const itemsContainer = document.querySelector(".items-container");
 async function initializePlayers() {
   players = await Repository.getPlayers();
 
@@ -317,9 +311,5 @@ function addNewItemPlaceholder() {
   div.append(...content);
   return div;
 }
-
-const findPlayer = (id) => {
-  return players.find((player) => player.id === id);
-};
 
 initializePlayers();
