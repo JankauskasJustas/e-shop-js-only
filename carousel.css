@@ -58,11 +58,11 @@
 }
 
 .carousel .carousel__actions button#carousel__button--prev {
-  margin-left: 20px;
+  margin-left: var(--l-spacing);
 }
 
 .carousel .carousel__actions button#carousel__button--next {
-  margin-right: 20px;
+  margin-right: var(--l-spacing);
 }
 
 .stretched-link::after {

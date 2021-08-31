@@ -15,6 +15,10 @@
   --item-bg-color: rgb(53 0 40 / 22%);
 
   --item-carousel-border-radius: 20px;
+  --xs-spacing: 5px;
+  --s-spacing: 10px;
+  --m-spacing: 15px;
+  --l-spacing: 20px;
 }
 
 html {
@@ -77,7 +81,7 @@ body {
 }
 
 .footer--rounded {
-  border-radius: 10px;
+  border-radius: var(--s-spacing);
   border-top-right-radius: 45px;
   border-top-left-radius: 45px;
 }

@@ -1,3 +1,8 @@
+:root {
+  --input-border-radius: 5px;
+  --input-padding: 5px;
+}
+
 .new-item-form {
   height: 100%;
   display: grid;
@@ -7,8 +12,8 @@
 }
 
 input {
-  padding: 5px;
-  border-radius: 5px;
+  padding: var(--input-padding);
+  border-radius: var(--input-border-radius);
   border: 0;
   outline: none;
 }
@@ -30,8 +35,8 @@ input::placeholder {
 
 button {
   max-width: 150px;
-  padding: 5px;
-  border-radius: 5px;
+  padding: var(--input-padding);
+  border-radius: var(--input-border-radius);
   border: 0;
   outline: none;
 }
@@ -44,12 +49,12 @@ label {
   display: inline-flex;
   width: 100%;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: var(--xs-spacing);
   align-items: center;
 }
 
 label span {
-  margin-right: 5px;
+  margin-right: var(--xs-spacing);
 }
 
 .form__submit-btn {
