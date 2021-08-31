@@ -18,33 +18,69 @@ document
     if (e.target.id.startsWith("editBtn")) {
       const id = Number(e.target.id.substring(8));
       const itemContainer = e.target.parentElement.parentElement;
-      const playerToEdit = players.find((player) => player.id === id);
+      const playerToEdit = findPlayer(id);
 
-      // Need to get Player obj
       itemContainer.innerHTML = `
+      <button class="cancel-btn" id="cancelBtn" type="button">X</button> 
       <form class="new-item-form">
-          <input hidden type="number" name="id" id="id" value="${playerToEdit.id}">
-          <label>
-              <span>Change image</span>
-              <input type="file" name="image" id="image">
-          </label>
-          <label>
-              <span>Name</span>
-              <input required type="text" name="name" id="name" value="${playerToEdit.name}">
-          </label>
-          <label>
-              <span>Surname</span>
-              <input required type="text" name="surname" id="surname" value="${playerToEdit.surname}">
-          </label>
-          <label>
-              <span>Upload jerseys</span>
-              <input type="file" name="jerseys" id="jerseys" multiple>
-          </label>
-          <button id="updatePlayerBtn" type="button">Submit</button>
-      </form>`;
+      <input hidden type="number" name="id" id="id" value="${playerToEdit.id}">
+        <label>
+            <span>Change main image</span>
+            <input hidden type="file" name="image" id="image">
+            <button type="button" onclick="document.getElementById('image').click()">Choose file...</button>
+        </label>
+        <label>
+            <span>Name</span>
+            <input type="text" name="name" placeholder="Add player name" id="name" value="${playerToEdit.name}">
+        </label>
+        <label>
+            <span>Surname</span>
+            <input type="text" name="surname" placeholder="Add player surname" id="surname" value="${playerToEdit.surname}">
+        </label>
+        <label>
+            <span>Upload jerseys</span>
+            <input hidden type="file" name="jerseys" id="jerseys" multiple>
+            <button type="button" onclick="document.getElementById('jerseys').click()">Choose files...</button>
+        </label>
+        <button class="form__submit-btn" id="updatePlayerBtn" type="button">Update</button>
+    </form>
+      `;
 
+      // if(form) {
+
+      // }
       form = document.querySelector(".new-item-form");
 
+      return;
+    }
+
+    // Add new item click handler
+    if (e.target.classList.contains("item--new")) {
+      e.target.innerHTML = `
+    <button class="cancel-btn" id="cancelBtn" type="button">X</button> 
+    <form class="new-item-form">
+        <label>
+            <span>Upload main image</span>
+            <input hidden type="file" name="image" id="image">
+            <button type="button" onclick="document.getElementById('image').click()">Choose file...</button>
+        </label>
+        <label>
+            <span>Name</span>
+            <input type="text" name="name" id="name">
+        </label>
+        <label>
+            <span>Surname</span>
+            <input type="text" name="surname" id="surname">
+        </label>
+        <label>
+            <span>Upload jerseys</span>
+            <input hidden type="file" name="jerseys" id="jerseys" multiple>
+            <button type="button" onclick="document.getElementById('jerseys').click()">Choose files...</button>
+        </label>
+        <button class="form__submit-btn" id="addNewPlayerBtn" type="button">Submit</button>
+    </form>`;
+
+      form = document.querySelector(".new-item-form");
       return;
     }
 
@@ -90,7 +126,7 @@ document
     // Update existing player handler
     if (e.target.id === "updatePlayerBtn") {
       const id = form.elements.id.valueAsNumber;
-      const player = players.find((player) => player.id === id);
+      const player = findPlayer(id);
       const name = form.elements.name.value;
       const surname = form.elements.surname.value;
       const img = (await toBase64(form.elements.image.files[0])) ?? player.img;
@@ -118,31 +154,22 @@ document
       return;
     }
 
-    // Add new item click handler
-    if (e.target.classList.contains("item--new")) {
-      e.target.innerHTML = ` 
-    <form class="new-item-form">
-        <label>
-            <span>Upload main image</span>
-            <input required type="file" name="image" id="image">
-        </label>
-        <label>
-            <span>Name</span>
-            <input required type="text" name="name" id="name">
-        </label>
-        <label>
-            <span>Surname</span>
-            <input required type="text" name="surname" id="surname">
-        </label>
-        <label>
-            <span>Upload jerseys</span>
-            <input required type="file" name="jerseys" id="jerseys" multiple>
-        </label>
-        <button id="addNewPlayerBtn" type="button">Submit</button>
-    </form>`;
+    // Cancel edit or insert
+    if (e.target.id === "cancelBtn") {
+      const parentElem = e.target.parentElement;
+      if (parentElem.classList.contains("item--new")) {
+        const content = getNewItemContent();
 
-      form = document.querySelector(".new-item-form");
-      return;
+        parentElem.innerHTML = "";
+        parentElem.append(...content);
+      } else {
+        const id = Number(parentElem.id);
+        const player = findPlayer(id);
+        const content = getItemContent(player);
+
+        parentElem.innerHTML = "";
+        parentElem.append(...content);
+      }
     }
   });
 
@@ -185,16 +212,8 @@ async function initializePlayers() {
 
 function renderPlayers() {
   players.forEach((player) => {
-    const div = createDivElement(player);
-    const actions = createActionsElements(player.id);
-    const img = createImgElement(player);
-    const span = createSpanElement(player);
-
-    div.appendChild(actions);
-    div.appendChild(img);
-    div.appendChild(span);
-
-    itemsContainer.appendChild(div);
+    const html = getPlayerItemHtml(player);
+    itemsContainer.appendChild(html);
   });
 
   itemsContainer.appendChild(addNewItemPlaceholder());
@@ -202,13 +221,43 @@ function renderPlayers() {
   itemsContainer.firstElementChild.focus();
 }
 
-function createDivElement(player) {
+function getPlayerItemHtml(player) {
+  const div = createItemDiv(player);
+  const content = getItemContent(player);
+
+  div.append(...content);
+
+  return div;
+}
+
+function createItemDiv(player) {
   const div = document.createElement("div");
   div.classList.add("items-container__item");
   div.tabIndex = 0;
   div.id = player.id;
 
   return div;
+}
+
+function getItemContent(player) {
+  const actions = createActionsElements(player.id);
+  const img = createImgElement(player);
+  const span = createSpanElement(player);
+
+  return [actions, img, span];
+}
+
+function getNewItemContent() {
+  const img = document.createElement("img");
+  img.classList.add("plus--small");
+
+  img.src = "assets/plus.svg";
+  img.alt = "Add new item";
+
+  const span = document.createElement("span");
+  span.innerHTML = "Add new item";
+
+  return [img, span];
 }
 
 function createActionsElements(id) {
@@ -263,18 +312,14 @@ function addNewItemPlaceholder() {
   div.classList.add("item--new");
   div.tabIndex = 0;
 
-  const img = document.createElement("img");
-  img.classList.add("plus--small");
+  const content = getNewItemContent();
 
-  img.src = "assets/plus.svg";
-  img.alt = "Add new item";
-
-  const span = document.createElement("span");
-  span.innerHTML = "Add new item";
-
-  div.appendChild(img);
-  div.appendChild(span);
+  div.append(...content);
   return div;
 }
+
+const findPlayer = (id) => {
+  return players.find((player) => player.id === id);
+};
 
 initializePlayers();

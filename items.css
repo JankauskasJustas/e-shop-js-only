@@ -24,12 +24,6 @@
   pointer-events: none;
 }
 
-.new-item-form {
-  height: 100%;
-  display: grid;
-  align-items: center;
-  text-align: start;
-}
 .plus--small {
   height: 85px;
 }
