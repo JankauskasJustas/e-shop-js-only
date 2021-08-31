@@ -21,7 +21,7 @@ export class Repository {
 
   static updatePlayer(player, id) {
     return fetch(`http://localhost:3000/players/${id}`, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify({
         name: player.name,
         surname: player.surname,
