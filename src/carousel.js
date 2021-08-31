@@ -46,6 +46,7 @@ document
 
 function cleanupCarousel() {
   const nodesToRemove = [];
+  slidePosition = 0;
   carousel.childNodes.forEach((node) => {
     if (node.classList?.contains("carousel__item")) {
       nodesToRemove.push(node);
@@ -62,7 +63,6 @@ function updateSlidePosition() {
     slide.classList.remove("carousel__item--visible");
     slide.classList.add("carousel__item--hidden");
   }
-
   slides[slidePosition].classList.add("carousel__item--visible");
 }
 
