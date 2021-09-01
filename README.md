@@ -8,7 +8,7 @@ How to run the program:
 ### `json-server`
 1. Install `json-server` by typing `npm i -g json-server`
 2. Go to root/db/ and there run the command: `json-server --watch db.json`
-3. That's it! You can check it out on `http://localhost:3000`
+3. That's it! You can check it out on `http://localhost:3000/players`
 
 ## launching frontend
 ### `http-server` way
